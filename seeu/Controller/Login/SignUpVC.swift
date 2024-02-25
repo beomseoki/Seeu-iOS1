@@ -40,6 +40,8 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     let emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "아이디"
+        tf.textContentType = .username
+        tf.keyboardType = .emailAddress
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -50,7 +52,9 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     let passWordTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "비밀번호"
+        tf.textContentType = .newPassword
         tf.isSecureTextEntry = true
+        
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -61,7 +65,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("로그인", for: .normal)
+        button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
         button.layer.cornerRadius = 5
@@ -99,7 +103,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         configureViewComponents()
         
         view.addSubview(alreadyAccountButton)
-        alreadyAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 330, paddingRight: 0, width: 0, height: 200) // paddingbottom 0
+        alreadyAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 100, paddingRight: 0, width: 0, height: 50) // paddingbottom 0
         
         
     }
@@ -155,6 +159,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 return
             }
             
+            
             // 이미지 선택을 한 경우 !
             guard let profileImage = self.plusPhotoBtn.imageView?.image else { return }
             
@@ -199,6 +204,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                         Database.database().reference().child("user").updateChildValues(values) { error, ref in
                             print("성공적으로 데이터베이스에 저장됐다.")
                         }
+                        _ = self.navigationController?.popViewController(animated: true)
 
                     }
                     

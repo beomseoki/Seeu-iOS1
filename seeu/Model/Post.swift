@@ -10,7 +10,7 @@ import Foundation
 class Post {
     
     var caption: String!
-    var like: Int!
+    var likes: Int!
     var ownerUid: String!
     var creationDate: Date!
     var postId: String!
@@ -28,8 +28,8 @@ class Post {
             self.caption = caption
         }
         
-        if let like = dictionary["like"] as? Int {
-            self.like = like
+        if let likes = dictionary["likes"] as? Int {
+            self.likes = likes
         }
         
         if let ownerUid = dictionary["ownerUid"] as? String {

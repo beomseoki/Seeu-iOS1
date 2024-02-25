@@ -11,12 +11,9 @@ import Firebase
 class MainTabVC: UITabBarController, UITabBarControllerDelegate {
 
    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-
-        // delegate
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         self.delegate = self
         
         //self.tabBarController?.delegate = self
@@ -28,13 +25,9 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
 
         //* 사용자가 로그인을 했는지, 안했는지 확인하는 함수
         checkIfUserIsLoggedIn()
-        
-        
-        
-        
-
-
     }
+    
+
     
     
     
@@ -76,25 +69,6 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         // return nav controller
         return navController
     }
-    
-    
-//    func constructNavController(unseletedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController = UIViewController()) -> UINavigationController {
-//
-//        // 이제 네비게이션컨트롤러를 이용해서 선택한거랑, 안한거에 대한 이미지를 넣어주는거임
-//        let navController = UINavigationController(rootViewController: rootViewController)
-//        navController.tabBarItem.image = unseletedImage
-//        navController.tabBarItem.selectedImage = selectedImage
-//        navController.navigationBar.tintColor = .black
-////        navController.modalPresentationStyle = .fullScreen
-//
-//
-//        // 네비게이션 컨트롤이 호출될때마다 위에 설정한대로 이미지로 반환되는거임
-//        return navController
-//
-//    }
-    
-    
-    
     
     
     // MARK: - 탭바 선택지

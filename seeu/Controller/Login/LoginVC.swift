@@ -139,25 +139,11 @@ class LoginVC: UIViewController {
         
         //background color
         view.backgroundColor = .white
-        
-//        view.addSubview(titleImageView)
-//
-//        NSLayoutConstraint.activate([
-//            titleImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            titleImageView.widthAnchor.constraint(equalToConstant: 150),
-//            titleImageView.heightAnchor.constraint(equalToConstant: 200),
-        //]) //image 조절하는 제약
-        
         // 내비게이션 위에 막대 없애기
         
         navigationController?.navigationBar.isHidden = true
         
         navigationController?.navigationBar.barStyle = .black
-        
-        
-
-
-        
         
         view.addSubview(logoContainerView)
         logoContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 140)
@@ -242,8 +228,10 @@ class LoginVC: UIViewController {
             
 //            // 겹치게 되면 이 코드는 다음 창을 보여줌 / 이렇게 하면 우리가 로그아웃하고 , 다시 로그인하면 계속해서 그 상황이 겹쳐져서 느려지게 되는거임
             let mainTabVC = MainTabVC()
-            self.navigationController?.pushViewController(mainTabVC, animated: true)
+            //self.navigationController?.pushViewController(mainTabVC, animated: true)
             mainTabVC.modalPresentationStyle = .fullScreen
+            self.present(mainTabVC, animated: true, completion: nil)
+            
         
             
             

@@ -17,20 +17,19 @@ class MainCell: UITableViewCell {
         didSet {
             
             guard let ownerUid = post?.ownerUid else { return }
-            //guard let likes = post?.like else { return }
+            guard let likes = post?.likes else { return }
             
             Database.fetchUser(with: ownerUid) { (user) in
                 
                 self.profileImageView.loadImage(with: user.profileImageUrl)
                 self.nicknameLabel.text = user.name
                 self.titleLabel.text = self.post?.caption
-                //self.timeLabel.text = "(\(likes) 좋아요 "
                 
                 
             }
             
-            //reation.likebutton.setTitle("\(likes) like", for: .normal)
-            //print("\(likes) lsd")
+            likesLabel.text = "\(likes)"
+            
         }
         
         
@@ -45,13 +44,7 @@ class MainCell: UITableViewCell {
         return imageView
     }()
     
-//    let profileImageView: UIImageView = {
-//       let imageView = UIImageView()
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "gear")
-//        imageView.contentMode = .scaleAspectFit
-//        return imageView
-//    }()
+
     
     let nicknameLabel: UILabel = {
         let label = UILabel()
@@ -215,7 +208,11 @@ class MainCell: UITableViewCell {
         nicknameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         nicknameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
         
+        
+        
         // 시간
+        //self.contentView.addSubview(self.timeLabel)
+        
         
         self.contentView.addSubview(self.titleLabel)
         
@@ -227,15 +224,16 @@ class MainCell: UITableViewCell {
         
         // 좋아요 몇 개 , 댓글 몇 개
         self.contentView.addSubview(self.likesLabel)
-        likesLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: likeButton.rightAnchor, paddingTop: 0, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        likesLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: likeButton.rightAnchor, paddingTop: 10, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         self.contentView.addSubview(self.commentLabel)
-        commentLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: commentButton.rightAnchor, paddingTop: 0, paddingLeft: 3, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        commentLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: commentButton.rightAnchor, paddingTop: 10, paddingLeft: 3, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         
         //self.contentView.addSubview(self.reation)
         
         self.contentView.addSubview(self.separator)
+        
         
         //self.nicknameContainer.addArrangedSubview(self.profileImageView)
         //self.nicknameContainer.addArrangedSubview(self.nicknameLabel)
@@ -262,6 +260,10 @@ class MainCell: UITableViewCell {
         
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        
+        //시간
+        //self.timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         //self.reation.translatesAutoresizingMaskIntoConstraints = false
         
         //self.stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -284,10 +286,16 @@ class MainCell: UITableViewCell {
             //self.profileImageView.widthAnchor.constraint(equalToConstant: 24),
             //self.profileImageView.heightAnchor.constraint(equalToConstant: 24),
             
+            //self.timeLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
+            //self.timeLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 24),
+            //self.timeLabel.heightAnchor.constraint(equalToConstant: 24),
+            
+            
             //수정중
             
             
             // 게시글 내용
+            //self.titleLabel.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 8),
             self.titleLabel.topAnchor.constraint(equalTo: self.nicknameContainer.bottomAnchor, constant: 20),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 24),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -24),
@@ -305,6 +313,7 @@ class MainCell: UITableViewCell {
             //self.reation.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -6),
             
             self.separator.heightAnchor.constraint(equalToConstant: 1),
+            //self.separator.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 5),
             self.separator.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 8),
             self.separator.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -8),
             self.separator.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 5)
@@ -341,7 +350,7 @@ class MainCell: UITableViewCell {
         
         
         addSubview(stackView)
-        stackView.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 16)
+        stackView.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 16)
         
         
         

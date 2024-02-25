@@ -11,6 +11,7 @@ import Firebase
 class HomeFeed: UITableViewController {
     
     var posts = [Post]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +54,8 @@ class HomeFeed: UITableViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout)) // 로그아웃 버튼을 눌렀을때 이제 액션에 있는 핸들에 대한 오브젝트쪽함수가 실행
         
         self.navigationItem.title = "커뮤니티"
+        
+      
         
         
         
@@ -128,7 +131,7 @@ class HomeFeed: UITableViewController {
             }
             
             // 내가 적어놓은 내용들이 제대로 출력 되는 지 확인 
-            print("게시글 내용 , ", post.caption)
+            //print("게시글 내용 , ", post.caption)
             
             self.tableView.reloadData()
             
