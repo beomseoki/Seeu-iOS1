@@ -11,6 +11,7 @@ import Firebase
 
 class MainCell: UITableViewCell {
     
+    var delegate: MainCellDelegate?
     var stackView : UIStackView!
     var post: Post? {
         
@@ -22,7 +23,7 @@ class MainCell: UITableViewCell {
             Database.fetchUser(with: ownerUid) { (user) in
                 
                 self.profileImageView.loadImage(with: user.profileImageUrl)
-                self.nicknameLabel.text = user.name
+                self.usernameButton.setTitle(user.name, for: .normal)
                 self.titleLabel.text = self.post?.caption
                 
                 
@@ -44,15 +45,13 @@ class MainCell: UITableViewCell {
         return imageView
     }()
     
-
-    
-    let nicknameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        label.textColor = UIColor(w: 41)
-        label.text = "사용자" //데이터 베이스를 통해서 가져오기
-        label.numberOfLines = 1
-        return label
+    lazy var usernameButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Username", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        button.addTarget(self, action: #selector(handleUsernameTapped) , for: .touchUpInside)
+        return button
     }()
     
     let timeLabel: UILabel = {
@@ -82,26 +81,13 @@ class MainCell: UITableViewCell {
         return label
     }()
     
-    
-    
-    
-    // 좋아요 댓글 버튼 스택뷰로 묶은 용도의 함수
-    let container: UIStackView = {
-        let stackView = UIStackView()
-        //stackView.distribution = .fillEqually
-        stackView.axis = .horizontal
-        stackView.spacing = 6
-        return stackView
-        
-    }()
-    
     // 좋아요 , 댓글
     let reation = Reaction()
     
     // 좋아요 , 댓글
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "like_unselected"), for: .normal)
+        //button.setImage(UIImage(systemName: "like_unselected"), for: .normal)
         button.tintColor = .black
         
         button.imageView?.contentMode = .scaleAspectFit
@@ -122,6 +108,8 @@ class MainCell: UITableViewCell {
         //config.background.strokeColor = UIColor.black 테두리 색깔 지정
 
         button.configuration = config
+        button.addTarget(self, action: #selector(handleLikeTapped) , for: .touchUpInside)
+
         
         return button
         
@@ -129,7 +117,7 @@ class MainCell: UITableViewCell {
     
     lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "comment"), for: .normal)
+        //button.setImage(UIImage(systemName: "comment"), for: .normal)
         button.tintColor = .black
         
         button.imageView?.contentMode = .scaleAspectFit
@@ -150,12 +138,13 @@ class MainCell: UITableViewCell {
         //config.background.strokeColor = UIColor.black 테두리 색깔 지정
 
         button.configuration = config
+        button.addTarget(self, action: #selector(handleCommentTapped) , for: .touchUpInside)
         return button
         
     }()
     
     // 좋아요 숫자 , 댓글 숫자
-    lazy var likesLabel: UILabel = {
+    let likesLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.text = "3"
@@ -168,7 +157,7 @@ class MainCell: UITableViewCell {
         return label
     }()
     
-    lazy var commentLabel: UILabel = {
+    let commentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.text = "5"
@@ -204,19 +193,15 @@ class MainCell: UITableViewCell {
         profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         profileImageView.layer.cornerRadius = 40 / 2
         
-        self.contentView.addSubview(self.nicknameLabel)
-        nicknameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        nicknameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
-        
-        
+        addSubview(usernameButton)
+        usernameButton.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        usernameButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
         
         // 시간
         //self.contentView.addSubview(self.timeLabel)
         
         
         self.contentView.addSubview(self.titleLabel)
-        
-        //
         
         // 좋아요 , 댓글 버튼 
         configureActionButtons()
@@ -230,90 +215,46 @@ class MainCell: UITableViewCell {
         commentLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: commentButton.rightAnchor, paddingTop: 10, paddingLeft: 3, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         
-        //self.contentView.addSubview(self.reation)
-        
         self.contentView.addSubview(self.separator)
         
         
         //self.nicknameContainer.addArrangedSubview(self.profileImageView)
         //self.nicknameContainer.addArrangedSubview(self.nicknameLabel)
         self.nicknameContainer.addArrangedSubview(self.timeLabel)
-        
-        
-        // 좋아요 댓글 스택 뷰
-        //self.container.addArrangedSubview(self.likeButton)
-        ///self.container.addArrangedSubview(self.commentButton)
-        //self.container.addArrangedSubview(self.likesLabel)
-        
-        
-        
+
         
         // 레이아웃 설정
         self.nicknameContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        //self.container.translatesAutoresizingMaskIntoConstraints = false
-        
         self.profileImageView.translatesAutoresizingMaskIntoConstraints = false
         
         //수정중
-        self.nicknameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        //self.nicknameLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         
         //시간
         //self.timeLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        //self.reation.translatesAutoresizingMaskIntoConstraints = false
-        
-        //self.stackView.translatesAutoresizingMaskIntoConstraints = false
         self.separator.translatesAutoresizingMaskIntoConstraints = false
 
         
         //Layout 조절하기 , x
         
         NSLayoutConstraint.activate([
-//            self.nicknameContainer.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
-//            self.nicknameContainer.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 24),
-            
             // 수정중
             self.nicknameContainer.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
             self.nicknameContainer.leadingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor, constant: 24),
             self.nicknameContainer.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -24),
             self.nicknameContainer.heightAnchor.constraint(equalToConstant: 24),
-            
-            
-            //self.profileImageView.widthAnchor.constraint(equalToConstant: 24),
-            //self.profileImageView.heightAnchor.constraint(equalToConstant: 24),
-            
-            //self.timeLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
-            //self.timeLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 24),
-            //self.timeLabel.heightAnchor.constraint(equalToConstant: 24),
-            
-            
-            //수정중
-            
-            
+
+
             // 게시글 내용
-            //self.titleLabel.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 8),
             self.titleLabel.topAnchor.constraint(equalTo: self.nicknameContainer.bottomAnchor, constant: 20),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 24),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -24),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -24),
             
-
-            // 좋아요 , 댓글 수정 전
-            //self.container.heightAnchor.constraint(equalToConstant: 16),
-            //self.container.bottomAnchor.constraint(equalTo: self.separator.topAnchor, constant: 5),
-            //self.container.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
-            
-            //self.reation.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 5),
-            //self.reation.heightAnchor.constraint(equalToConstant: 16),
-            //self.reation.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
-            //self.reation.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -6),
             
             self.separator.heightAnchor.constraint(equalToConstant: 1),
-            //self.separator.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 5),
             self.separator.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 8),
             self.separator.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -8),
             self.separator.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 5)
@@ -323,6 +264,25 @@ class MainCell: UITableViewCell {
         ])
         
     }
+    
+    // MARK: - Handlers
+    
+    @objc func handleUsernameTapped() {
+        delegate?.handleUsernameTapped(for: self)
+    }
+    
+    @objc func handleLikeTapped() {
+        delegate?.handleLikeTapped(for: self)
+    }
+    
+    @objc func handleCommentTapped() {
+        delegate?.handleCommentTapped(for: self)
+    }
+    
+
+    
+
+
     
     func configurePostCaption(user: User) {
         
@@ -346,7 +306,7 @@ class MainCell: UITableViewCell {
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        //stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         
         
         addSubview(stackView)

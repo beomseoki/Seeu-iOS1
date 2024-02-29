@@ -98,14 +98,19 @@ extension Database {
     
     static func fetchPost(with postId: String, completion: @escaping(Post) -> ()) {
         
-        POSTS_REF.child(postId).observeSingleEvent(of: .value) { (snapshot) in
+        POSTS_REF.child(postId).observeSingleEvent(of: .value) { snapshot in
+            
             guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
             guard let ownerUid = dictionary["ownerUid"] as? String else { return }
             
-            Database.fetchPost(with: ownerUid) { (user) in
-                let post = Post(postId: postId, dictionary: dictionary) // user: user 가 빠졌는데 post에 대해서 추가를 어떻게 건드릴지 모르겠음 
+            Database.fetchUser(with: ownerUid) { user in
+                
+                let post = Post(postId: postId, user: user, dictionary: dictionary)
+                
                 completion(post)
             }
+            
+            
         }
     }
 }

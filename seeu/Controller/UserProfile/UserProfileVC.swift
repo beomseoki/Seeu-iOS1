@@ -93,26 +93,19 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     func fetchPosts() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        USER_POSTS_REF.child(currentUid).observe(.childAdded) { snapshot in // 현재 로그인된 계정에서 게시물들의 정보들을 가져온거임 ! 그래서 우리가 snapshot을 출력해봤을때 게시물들의 대빵의 정보들을 출력할 수 있었던것이였고 ! 그걸이용해서 잉제 게시물들의 정보들이 나올 수 있게 만들어야지!
+        USER_POSTS_REF.child(currentUid).observe(.childAdded) { snapshot in // 현재 로그인된 계정에서 게시물들의 정보들을 가져온거임 ! 그래서 우리가 snapshot을 출력해봤을때 게시물들의 대빵의 정보들을 출력할 수 있었던것이였고 ! 그걸이용하여 게시물들의 정보들이 나올 수 있게 만들어야지!
             
             let postId = snapshot.key
             
-            POSTS_REF.child(postId).observeSingleEvent(of: .value) { snapshot in
+            Database.fetchPost(with: postId) { post in
                 
-                guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
+                self.posts.append(post)
                 
-                let post = Post(postId: postId, dictionary: dictionary)
-                
-                self.posts.append(post)  // 이런식으로 코드를 짜는 이유는 위에 스냅샷을 통해 , 게시글의 키와 벨류를 얻을 수 있었음 , 그래서 이제 키와 벨류를 따로 values를 이용해서 값을 뽑아내면 내가 원하는 아이디에 맞춰서 값들이 나오게 되니깐 ! 딕셔너리 형태로 값을 저장해두고 , 우리가 post라는 파일에서 적은거처럼 포스트 생성자를 통해서 아이디를 통해서 값이 나오는걸 post로 넣고 ! / 그 다음에 posts라고 변수를 만들어서 (저장할 수 있는 딕셔너리 형태로 만들어줘서 ) 거기에 추가를 시켜놓는거임 !
-                
-                
-                // 생성날짜를 확인하기 위해 정렬하는
-                self.posts.sort { (post1, post2) in
-                    return post1.creationDate > post2.creationDate
+                self.posts.sort { post1, post2 in
+                    post1.creationDate > post2.creationDate
                 }
                 
                 self.collectionView.reloadData()
-                
             }
             
         }

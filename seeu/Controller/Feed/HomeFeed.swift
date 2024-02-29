@@ -8,9 +8,11 @@
 import UIKit
 import Firebase
 
-class HomeFeed: UITableViewController {
+class HomeFeed: UITableViewController, MainCellDelegate {
     
     var posts = [Post]()
+    var post: Post?
+    var currentKey: String?
     
 
     override func viewDidLoad() {
@@ -22,6 +24,10 @@ class HomeFeed: UITableViewController {
         // 테이블 뷰에 쓸 cell등록
         self.tableView.register(MainCell.self, forCellReuseIdentifier: "MainCell")
         self.tableView.reloadData()
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
         
         fetchPost()
 
@@ -42,13 +48,52 @@ class HomeFeed: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! MainCell
+        
+        cell.delegate = self
+        
         cell.post = posts[indexPath.row]
         
         return cell
     }
     
-    // MARK: - 기능 탐색, 구성 / 로그인 기능 탐색하고 로그아웃하려고
+    // MARK: - MainCell Protocol
     
+    func handleUsernameTapped(for cell: MainCell) {
+        
+        // 현재 MainCell 을 참조하고 있기 때문에 우리는 메인셀에 있는 post에 셀들을 가져올 수 있는거임 
+        guard let post = cell.post else { return }
+        
+        let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+        
+        userProfileVC.user = post.user
+        
+        navigationController?.pushViewController(userProfileVC, animated: true)
+    }
+    
+    func handleLikeTapped(for cell: MainCell) {
+        guard let post = cell.post else { return }
+        
+        if post.didLike {
+            // 좋아요 삭제
+            post.adjustLikes(addLike: false) { likes in
+                cell.likesLabel.text = "\(likes)"
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+            }
+
+        } else {
+            // 좋아요 클릭 가능 
+            post.adjustLikes(addLike: true) { likes in
+                cell.likesLabel.text = "\(likes)"
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+            }
+        }
+    }
+    
+    func handleCommentTapped(for cell: MainCell) {
+        print("comment")
+    }
+        
+    // MARK: - 기능 탐색, 구성 / 로그인 기능 탐색하고 로그아웃하려고
     func configureLogoutButton() {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout)) // 로그아웃 버튼을 눌렀을때 이제 액션에 있는 핸들에 대한 오브젝트쪽함수가 실행
@@ -62,6 +107,15 @@ class HomeFeed: UITableViewController {
     }
     
     //
+    
+    
+    @objc func handleRefresh() {
+        posts.removeAll(keepingCapacity: false)
+        self.currentKey = nil
+        fetchPost()
+        refreshControl?.endRefreshing()
+        tableView.reloadData()
+    }
     
 
     
@@ -120,31 +174,19 @@ class HomeFeed: UITableViewController {
             let postId = snapshot.key
             
             
-            guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
-            
-            let post = Post(postId: postId, dictionary: dictionary)
-            
-            self.posts.append(post)
-            
-            self.posts.sort { (post1, post2) in
-                return post1.creationDate > post2.creationDate
+            Database.fetchPost(with: postId) { post in
+                
+                self.posts.append(post)
+                
+                self.posts.sort { post1, post2 in
+                    return post1.creationDate > post2.creationDate
+                }
+                
+                self.tableView.reloadData()
             }
-            
-            // 내가 적어놓은 내용들이 제대로 출력 되는 지 확인 
-            //print("게시글 내용 , ", post.caption)
-            
-            self.tableView.reloadData()
-            
-            
-            
-            
         }
-        
-        
-        
+
     }
-
-
 }
 
 
