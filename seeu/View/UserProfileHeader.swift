@@ -52,16 +52,7 @@ class UserProfileHeader: UICollectionViewCell {
         label.textAlignment = .center
         return label
     }()
-    
-//    let editProfileButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("프로필 편집", for: .normal)
-//        button.layer.cornerRadius = 5
-//        button.layer.borderColor = UIColor.lightGray.cgColor
-//        button.layer.borderWidth = 0.5
-//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-//        return button
-//    }()
+
     
     let editProfileButton: UIButton = {
         let button = UIButton(type: .system)

@@ -73,6 +73,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
     func handleLikeTapped(for cell: MainCell) {
         guard let post = cell.post else { return }
         
+        
         if post.didLike {
             // 좋아요 삭제
             post.adjustLikes(addLike: false) { likes in
@@ -90,7 +91,10 @@ class HomeFeed: UITableViewController, MainCellDelegate {
     }
     
     func handleCommentTapped(for cell: MainCell) {
-        print("comment")
+        guard let postId = cell.post?.postId else { return }
+        let DetailVC = DetailVC()
+        DetailVC.postId = postId
+        navigationController?.pushViewController(DetailVC, animated: true)
     }
         
     // MARK: - 기능 탐색, 구성 / 로그인 기능 탐색하고 로그아웃하려고
@@ -186,6 +190,15 @@ class HomeFeed: UITableViewController, MainCellDelegate {
             }
         }
 
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //guard let postId = post?.postId else { return }
+        let DetailVC = DetailVC()
+        //DetailVC.postId = postId
+        navigationController?.pushViewController(DetailVC, animated: true)
+        
     }
 }
 

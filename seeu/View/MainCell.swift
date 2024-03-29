@@ -96,17 +96,7 @@ class MainCell: UITableViewCell {
         //button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
         
         var config = UIButton.Configuration.plain()
-        //config.image = UIImage(named: "heart")
         config.image = UIImage(named: "like_unselected")
-        //preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 30) 사진 사이즈 변경
-        
-        //config.imagePadding = 5
-        //config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 32, bottom: 8, trailing: 3)
-        // leading 에 값을 줘서 왼쪽에서 멀어지게 만들어서 오른쪽 벽 과 붙이게 함
-        
-        //config.titleAlignment = .leading
-        //config.background.strokeColor = UIColor.black 테두리 색깔 지정
-
         button.configuration = config
         button.addTarget(self, action: #selector(handleLikeTapped) , for: .touchUpInside)
 
@@ -117,7 +107,6 @@ class MainCell: UITableViewCell {
     
     lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
-        //button.setImage(UIImage(systemName: "comment"), for: .normal)
         button.tintColor = .black
         
         button.imageView?.contentMode = .scaleAspectFit
@@ -227,8 +216,7 @@ class MainCell: UITableViewCell {
         self.nicknameContainer.translatesAutoresizingMaskIntoConstraints = false
         self.profileImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        //수정중
-        //self.nicknameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         

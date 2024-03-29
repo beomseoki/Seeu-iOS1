@@ -169,10 +169,6 @@ class LoginVC: UIViewController {
     @objc func handleShowSignUp() {
         let signUpVC = SignUpVC()
         navigationController?.pushViewController(signUpVC, animated: true)
-        //print("회웍나입")
-//        let naVC = UINavigationController(rootViewController: signUpVC)
-//        naVC.modalPresentationStyle = .fullScreen
-        //self.present(signUpVC, animated: true, completion: nil)
         
     }
     
@@ -251,10 +247,7 @@ class LoginVC: UIViewController {
                 
                 // 근데 비어있음, 즉 사용자가 아이디 비번 안적었다는거임
                 loginButton.isEnabled = false
-                //*loginButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
                 loginButton.backgroundColor = UIColor(red: 130/255, green: 210/255, blue: 205/255, alpha: 1)
-                //loginButton.backgroundColor = UIColor.systemBlue
-                //rgb(135,210,223)
                 return
                 
                 
@@ -263,10 +256,8 @@ class LoginVC: UIViewController {
         // 근데 비어있지않고 제대로 작성이 되었다면 !
         
         loginButton.isEnabled = true
-        //*loginButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         loginButton.backgroundColor = UIColor(red: 135/255, green: 200/223, blue: 223/255, alpha: 1)
-        //loginButton.backgroundColor = UIColor.systemGray4
-        //rgb(121,206,219)
+
         
     }
     
@@ -278,10 +269,7 @@ class LoginVC: UIViewController {
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         stackView.layer.cornerRadius = 10
-        //stackView.frame.size.height = 48
-        //stackView.alignment = .fill
-        
-        
+
         
         view.addSubview(stackView)
         stackView.anchor(top: logoContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 45, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 180) // 140
@@ -289,13 +277,6 @@ class LoginVC: UIViewController {
         
 //        view.addSubview(descriptionLabel)     설명창 넣어보는거
 //        descriptionLabel.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 50, paddingLeft: 50, paddingBottom: 0, paddingRight: 50, width: 0, height: 1000)
-        
-        
-        
-        
-        
-        
-        
         
     }
     

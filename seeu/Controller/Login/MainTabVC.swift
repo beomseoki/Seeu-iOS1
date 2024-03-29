@@ -77,23 +77,12 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         
         if index == 1 { // 탭바 순서 변경해야함
             
-//            let navigationController = UINavigationController()
-//            let uploadPostVC = UploadPostVC()
-//            navigationController.pushViewController(uploadPostVC, animated: true)
-//            window?.rootViewController = navigationController
-//            window?.makeKeyAndVisible()
-            
-            
-            
             let uploadPostVC = UploadPostVC()
             let nav = UINavigationController(rootViewController: uploadPostVC)
             nav.navigationBar.tintColor = .black
             nav.modalPresentationStyle = .fullScreen
             self.present(nav, animated: true, completion: nil)
-            
-            
-            
-            
+
             return false
             
         }
@@ -126,6 +115,12 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
             }
             return
         }
+    }
+    
+    func reloadData() {
+        
+        
+        
     }
     
     
