@@ -113,4 +113,42 @@ extension Database {
             
         }
     }
+    static func fetchComments(forPost postId: String, completion: @escaping ([Comment]) -> Void) {
+        var comments = [Comment]() // 새로운 댓글 배열
+        
+        COMENT_REF.child(postId).observeSingleEvent(of: .value) { snapshot in
+            guard let commentSnapshots = snapshot.children.allObjects as? [DataSnapshot] else {
+                completion([])
+                return
+            }
+            
+            let dispatchGroup = DispatchGroup()
+            
+            for commentSnapshot in commentSnapshots {
+                dispatchGroup.enter()
+                
+                guard let dictionary = commentSnapshot.value as? [String: Any],
+                      let uid = dictionary["uid"] as? String else {
+                    dispatchGroup.leave()
+                    continue
+                }
+                
+                Database.fetchUser(with: uid) { user in
+                    let comment = Comment(user: user, dictionary: dictionary)
+                    comments.append(comment) // 새로운 댓글을 배열에 추가
+                    dispatchGroup.leave()
+                }
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                // 모든 댓글을 받아온 후에 completion 핸들러를 호출합니다.
+                completion(comments)
+            }
+        }
+    }
+
+
+
+
+
 }

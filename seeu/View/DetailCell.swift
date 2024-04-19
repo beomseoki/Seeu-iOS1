@@ -26,7 +26,10 @@ class DetailCell: UITableViewCell {
             attributedText.append(NSAttributedString(string: " \(commentText)", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]))
             attributedText.append(NSAttributedString(string: " 2d.", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12), NSAttributedString.Key.foregroundColor: UIColor.lightGray]))
             
-            commnetLabel.attributedText = attributedText
+
+            
+            commnetTextLabel.attributedText = attributedText
+    
             
         }
     }
@@ -38,10 +41,15 @@ class DetailCell: UITableViewCell {
         imageView.backgroundColor = .lightGray
         return imageView
     }()
+
     
-    let commnetLabel: UILabel = {
-        let label = UILabel()
-        return label
+    let commnetTextLabel: UITextView = {
+        let tv = UITextView()
+        tv.textContainer.maximumNumberOfLines = 4
+        tv.textContainer.lineBreakMode = .byWordWrapping
+        tv.font = UIFont.systemFont(ofSize: 12)
+        tv.isScrollEnabled = false
+        return tv
     }()
     
     let separatorView: UIView = {
@@ -54,17 +62,17 @@ class DetailCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(self.profileImageView)
-        profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
+        profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 14, paddingBottom: 0, paddingRight: 0, width: 40, height: 40) // top 10 에서 조정중
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 40 / 2
         
         
-        addSubview(commnetLabel)
-        commnetLabel.anchor(top: topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 8, paddingRight: 0, width: 0, height: 0)
-        commnetLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        addSubview(commnetTextLabel)
+        commnetTextLabel.anchor(top: topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 14, paddingLeft: 8, paddingBottom: 8, paddingRight: 0, width: 0, height: 0)
+        commnetTextLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
-        addSubview(separatorView)
-        separatorView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
+//        addSubview(separatorView)
+//        separatorView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
 
     }
     
@@ -74,3 +82,5 @@ class DetailCell: UITableViewCell {
     
     
 }
+
+

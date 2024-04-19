@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 
+
 class Post {
     
     var caption: String!
@@ -17,6 +18,7 @@ class Post {
     var postId: String!
     var user: User?
     var didLike = false
+    var comments: [Comment]? // 댓글 배열 추가 
     
     // postId를 통해서 얻은 값들을 들어가보면 이제 키와 벨류 캡션,라이크 같은것들을 비교해서 값들을 뽑을 수 있는구조!
     //user: User,
@@ -25,6 +27,15 @@ class Post {
         self.postId = postId
         
         self.user = user
+        
+        if let commentsDict = dictionary["comments"] as? [String: Any] {
+        self.comments = commentsDict.compactMap { (key, value) in
+            // 각 댓글의 데이터를 확인하고 올바른 형식인지 확인한 후 Comment 객체로 변환하여 반환합니다.
+            guard let commentData = value as? [String: Any] else { return nil }
+            return Comment(user: self.user!, dictionary: commentData) // 변경된 초기화 메서드 호출
+        }
+        }
+
         
         if let caption = dictionary["caption"] as? String {
             self.caption = caption
@@ -95,3 +106,4 @@ class Post {
     
     
 }
+

@@ -89,13 +89,33 @@ class HomeFeed: UITableViewController, MainCellDelegate {
             }
         }
     }
+
     
     func handleCommentTapped(for cell: MainCell) {
         guard let postId = cell.post?.postId else { return }
-        let DetailVC = DetailVC()
-        DetailVC.postId = postId
-        navigationController?.pushViewController(DetailVC, animated: true)
+        
+        // 선택된 게시물의 정보 가져오기
+        Database.fetchPost(with: postId) { post in
+            
+            // 해당 게시물의 댓글 가져오기
+            Database.fetchComments(forPost: postId) { comments in
+                // 댓글이 성공적으로 가져와지면 DetailVC로 이동하고 게시물과 댓글 정보를 전달
+                let detailVC = DetailVC()
+                detailVC.post = post
+                detailVC.comments = comments
+                self.navigationController?.pushViewController(detailVC, animated: true)
+            }
+        }
     }
+
+
+    
+//    func handleCommentTapped(for cell: MainCell) {
+//        guard let postId = cell.post?.postId else { return }
+//        let DetailVC = DetailVC()
+//        DetailVC.postId = postId
+//        navigationController?.pushViewController(DetailVC, animated: true)
+//    }
         
     // MARK: - 기능 탐색, 구성 / 로그인 기능 탐색하고 로그아웃하려고
     func configureLogoutButton() {
@@ -192,14 +212,26 @@ class HomeFeed: UITableViewController, MainCellDelegate {
 
     }
     
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //guard let postId = post?.postId else { return }
-        let DetailVC = DetailVC()
-        //DetailVC.postId = postId
-        navigationController?.pushViewController(DetailVC, animated: true)
+        let selectedPost = posts[indexPath.row]
         
+        guard let postId = selectedPost.postId else { return }
+        
+        // 선택된 게시물의 정보 가져오기
+        Database.fetchPost(with: postId) { post in
+            
+            // 해당 게시물의 댓글 가져오기
+            Database.fetchComments(forPost: postId) { comments in
+                // 댓글이 성공적으로 가져와지면 DetailVC로 이동하고 게시물과 댓글 정보를 전달
+                let detailVC = DetailVC()
+                detailVC.post = post
+                detailVC.comments = comments
+                self.navigationController?.pushViewController(detailVC, animated: true)
+            }
+        }
     }
-}
+
+    }
+
 
 

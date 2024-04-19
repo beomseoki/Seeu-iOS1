@@ -82,7 +82,7 @@ class MainCell: UITableViewCell {
     }()
     
     // 좋아요 , 댓글
-    let reation = Reaction()
+    //let reation = Reaction()
     
     // 좋아요 , 댓글
     lazy var likeButton: UIButton = {
