@@ -31,6 +31,12 @@ class MainCell: UITableViewCell {
             
             likesLabel.text = "\(likes)"
             
+            // 게시물 작성 시간 표시
+            if let creationDate = post?.creationDate {
+                let timeAgoDisplay = creationDate.timeAgoDisplay()
+                timeLabel.text = timeAgoDisplay
+            }
+            
         }
         
         
@@ -268,23 +274,9 @@ class MainCell: UITableViewCell {
     }
     
 
-    
-
-
-    
-    func configurePostCaption(user: User) {
-        
-        //guard let post = self.post else { return }
-        //guard let caption = post.caption else { return }
-        //guard let username = post.user?.name else { return }
-        
-        
-        //let customType =
-        
-        
-        
-        
-        
+    // 댓글 수 없데이트 함수
+    func configureCommentCount(commentCount: Int) {
+        commentLabel.text = "\(commentCount)"
     }
     
     

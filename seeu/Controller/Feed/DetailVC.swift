@@ -20,8 +20,9 @@ class DetailVC: UIViewController {
     
     
     //수정중
-    var post: Post? // post 멤버 추가 
+    var post: Post? // post 멤버 추가
     
+   
     
     
     lazy var containerView: UIView = {
@@ -77,6 +78,16 @@ class DetailVC: UIViewController {
         return button
     }()
     
+    init(postId: String) {
+            self.postId = postId
+            super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,21 +102,6 @@ class DetailVC: UIViewController {
         tableView.sectionHeaderHeight = UITableView.automaticDimension // 1
 
         navigationItem.title = "Comments"
-        
-        // 댓글 업데이트
-        //fetchComments()
-        
-        
-        //x
-//        if let selectedPost = post {
-//            // 선택된 게시물의 내용 표시
-//            print("Selected post capion: \(selectedPost.caption)")
-//            print("Selected post likes: \(selectedPost.likes)")
-//
-//        }
-        
-        // 게시글 업데이트
-        //fetchPost()
         
         // 레이아웃 설정
         adjust()
@@ -200,9 +196,11 @@ class DetailVC: UIViewController {
             } else {
                 print("Comment uploaded successfully") // 댓글이 성공적으로 업로드되었는지 확인
                 self.commentTextField.text = nil // 게시를 한 후 텍스트를 빈칸으로 만들기 위해
+                self.fetchData()
             }
         }
     }
+
 
     
     // MARK: - API 수정중
@@ -237,86 +235,8 @@ class DetailVC: UIViewController {
         }
     }
 
-    
-    // 댓글 수정중,  
-//    func fetchComments() {
-//
-//        guard let postId = self.postId else { return }
-//
-//        // 게시글 아이디를 통해, 댓글에 있는 것들을 하나씩 업데이트 될때마다 업데이트 해주는 observe .childAdded / snapshot에는 comment에 있는 값들이 있기 때문에 그걸 뽑아주고 셀에 넣어줌
-//        COMENT_REF.child(postId).observe(.childAdded) { snapshot in
-//
-//
-//            guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
-//            guard let uid = dictionary["uid"] as? String else { return }
-//            print("Fetched comment data:", dictionary) // 댓글 데이터 출력
-//
-//
-//            Database.fetchUser(with: uid) { user in
-//                let comment = Comment(user: user, dictionary: dictionary)
-//                self.comments.append(comment)
-//                self.tableView.reloadData()
-//            }
-//
-//
-//        }
-//    }
-    
-//    func fetchComments() {
-//        guard let postId = self.postId else { return }
-//
-//        COMENT_REF.child(postId).observe(.childAdded) { snapshot in
-//            guard let dictionary = snapshot.value as? [String: Any] else { return } // 변경된 부분
-//            print("Fetched comment data:", dictionary) // 댓글 데이터 출력
-//
-//            Database.fetchUser(with: dictionary["uid"] as? String ?? "") { user in
-//                let comment = Comment(user: user, dictionary: dictionary)
-//                self.comments.append(comment)
-//                self.tableView.reloadData()
-//            }
-//        }
-//    }
-
-
-        
         
     }
-    
-
-
-
-    // 사용자 게시글
-//    func fetchPost() {
-//
-//        POSTS_REF.observe(.childAdded) { (snapshot) in
-//
-//            let postId = snapshot.key
-//
-//
-//            Database.fetchPost(with: postId) { post in
-//
-//                self.posts.append(post)
-//
-//                self.posts.sort { post1, post2 in
-//                    return post1.creationDate > post2.creationDate
-//                }
-//
-//
-//                self.tableView.reloadData()
-//            }
-//        }
-//
-//    }
-//
-
-    
-//    private func viewLayout() {
-//        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
-//    }
-    
-    
-    
-
 
 
 

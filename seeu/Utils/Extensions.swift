@@ -85,6 +85,33 @@ extension UIImageView {
     }
 }
 
+extension Date {
+    func timeAgoDisplay() -> String {
+        let secondsAgo = Int(Date().timeIntervalSince(self))
+        
+        let minute = 60
+        let hour = 60 * minute
+        let day = 24 * hour
+        let week = 7 * day
+        let month = 4 * week
+
+        if secondsAgo < minute {
+            return "\(secondsAgo)초 전"
+        } else if secondsAgo < hour {
+            return "\(secondsAgo / minute)분 전"
+        } else if secondsAgo < day {
+            return "\(secondsAgo / hour)시간 전"
+        } else if secondsAgo < week {
+            return "\(secondsAgo / day)일 전"
+        } else if secondsAgo < month {
+            return "\(secondsAgo / week)주 전"
+        }
+
+        return "\(secondsAgo / month)개월 전"
+    }
+}
+
+
 extension Database {
     
     static func fetchUser(with uid: String, completion: @escaping(User) -> ()) {
@@ -105,14 +132,18 @@ extension Database {
             
             Database.fetchUser(with: ownerUid) { user in
                 
-                let post = Post(postId: postId, user: user, dictionary: dictionary)
-                
-                completion(post)
+                // 포스트의 댓글 수를 가져오기 위해 fetchComments를 호출
+                Database.fetchComments(forPost: postId) { comments in
+                    
+                    // 포스트 객체 생성 시에 댓글 수를 추가
+                    let post = Post(postId: postId, user: user, dictionary: dictionary, comments: comments)
+                    
+                    completion(post)
+                }
             }
-            
-            
         }
     }
+
     static func fetchComments(forPost postId: String, completion: @escaping ([Comment]) -> Void) {
         var comments = [Comment]() // 새로운 댓글 배열
         

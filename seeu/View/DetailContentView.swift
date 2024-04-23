@@ -161,73 +161,20 @@ final class DetailContentView: UITableViewHeaderFooterView {
         
         self.backgroundView = UIView()
         self.backgroundView?.backgroundColor = .white
-        
-        // addview
-        //subView()
-        
+
         // 레이아웃 설정 
         designView()
         
         // 좋아요, 댓글 버튼과 숫자
         setupHeaderView()
-        
-        // 레이아웃 설정
-        //configureLayout()
-        
 
-        
-        
-            
     }
         
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    func subView() {
-//        self.addSubview(self.profileImageView)
-//        self.addSubview(self.userName)
-//        self.addSubview(self.timeLabel)
-//        self.addSubview(self.titleLabel)
-//        self.addSubview(self.separator)
-//    }
-    
-//    func configureLayout() {
-//        self.profileImageView.translatesAutoresizingMaskIntoConstraints = false
-//        self.userName.translatesAutoresizingMaskIntoConstraints = false
-//        self.timeLabel.translatesAutoresizingMaskIntoConstraints = false
-//        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-//        self.separator.translatesAutoresizingMaskIntoConstraints = false
-//
-//
-//
-//        NSLayoutConstraint.activate([
-//            self.profileImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10), // x
-//            self.profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-//            self.profileImageView.widthAnchor.constraint(equalToConstant: 40),
-//            self.profileImageView.heightAnchor.constraint(equalToConstant: 40),
-//
-//
-//            self.userName.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-//            self.userName.leadingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor, constant: 8),
-//
-//            self.timeLabel.topAnchor.constraint(equalTo: self.userName.bottomAnchor, constant: 0),
-//            self.timeLabel.leadingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor, constant: 8),
-//
-//            self.titleLabel.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 6), // x
-//            self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-//            self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
-//            self.titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -44), // x
-//
-//            self.separator.heightAnchor.constraint(equalToConstant: 1),
-//            self.separator.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
-//            self.separator.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
-//            self.separator.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
-//
-//
-//        ])
-//
-//    }
+
     
     
     // post가 설정될 때 UI를 업데이트하는 메서드

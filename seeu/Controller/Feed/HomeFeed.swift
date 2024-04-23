@@ -28,10 +28,13 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
-        
-        fetchPost()
 
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        posts.removeAll() // 현재 posts 배열 비우기
+        fetchPost() // 데이터 불러오기
     }
 
     // MARK: - Table view data source
@@ -52,6 +55,12 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         cell.delegate = self
         
         cell.post = posts[indexPath.row]
+        
+        
+        // 댓글 수 업데이트
+        if let commentCount = posts[indexPath.row].comments?.count {
+            cell.configureCommentCount(commentCount: commentCount)
+        }
         
         return cell
     }
@@ -100,7 +109,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
             // 해당 게시물의 댓글 가져오기
             Database.fetchComments(forPost: postId) { comments in
                 // 댓글이 성공적으로 가져와지면 DetailVC로 이동하고 게시물과 댓글 정보를 전달
-                let detailVC = DetailVC()
+                let detailVC = DetailVC(postId: postId)
                 detailVC.post = post
                 detailVC.comments = comments
                 self.navigationController?.pushViewController(detailVC, animated: true)
@@ -108,14 +117,6 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         }
     }
 
-
-    
-//    func handleCommentTapped(for cell: MainCell) {
-//        guard let postId = cell.post?.postId else { return }
-//        let DetailVC = DetailVC()
-//        DetailVC.postId = postId
-//        navigationController?.pushViewController(DetailVC, animated: true)
-//    }
         
     // MARK: - 기능 탐색, 구성 / 로그인 기능 탐색하고 로그아웃하려고
     func configureLogoutButton() {
@@ -182,7 +183,6 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         // 취소 옵션을 추가해주기 (즉 로그아웃 할거냐?, 아니면 잘못눌렀으니 취소 ? 이렇게) , 위에는 로그아웃에 대한 내용, 이거는 취소에 대한 내용
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        //다시 화면에 돌아오는거 같은데 , alertController는 잘 모르겠네
         present(alertController, animated: true, completion: nil)
         
     }
@@ -192,25 +192,28 @@ class HomeFeed: UITableViewController, MainCellDelegate {
 
 
     func fetchPost() {
-        
         POSTS_REF.observe(.childAdded) { (snapshot) in
-            
             let postId = snapshot.key
-            
-            
             Database.fetchPost(with: postId) { post in
-                
                 self.posts.append(post)
-                
-                self.posts.sort { post1, post2 in
-                    return post1.creationDate > post2.creationDate
+                // 게시물 작성자의 UID를 사용하여 사용자 정보를 가져옴
+                Database.fetchUser(with: post.ownerUid) { user in
+                    // 사용자 정보를 가져온 후에 셀에 적용
+                    guard let index = self.posts.firstIndex(where: { $0.postId == postId }) else { return }
+                    let indexPath = IndexPath(row: index, section: 0)
+                    if let cell = self.tableView.cellForRow(at: indexPath) as? MainCell {
+                        cell.profileImageView.loadImage(with: user.profileImageUrl)
+                        cell.usernameButton.setTitle(user.name, for: .normal)
+                    }
                 }
-                
+                // 게시물을 가져온 후에 정렬 및 테이블 뷰 리로드
+                self.posts.sort { $0.creationDate > $1.creationDate }
                 self.tableView.reloadData()
             }
         }
-
     }
+
+
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = posts[indexPath.row]
@@ -223,7 +226,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
             // 해당 게시물의 댓글 가져오기
             Database.fetchComments(forPost: postId) { comments in
                 // 댓글이 성공적으로 가져와지면 DetailVC로 이동하고 게시물과 댓글 정보를 전달
-                let detailVC = DetailVC()
+                let detailVC = DetailVC(postId: postId)
                 detailVC.post = post
                 detailVC.comments = comments
                 self.navigationController?.pushViewController(detailVC, animated: true)
