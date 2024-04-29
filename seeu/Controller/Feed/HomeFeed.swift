@@ -257,7 +257,11 @@ class HomeFeed: UITableViewController, MainCellDelegate {
                                     cell.profileImageView.image = UIImage(named: "default_profile_image")
                                 }
                             }
+<<<<<<< HEAD
                             // 바뀌는 모습을 보고 싶어 .....!!!??
+=======
+                            
+>>>>>>> master
                             cell.usernameButton.setTitle(user.name, for: .normal)
                         }
                     }
