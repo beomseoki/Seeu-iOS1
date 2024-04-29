@@ -257,7 +257,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
                                     cell.profileImageView.image = UIImage(named: "default_profile_image")
                                 }
                             }
-                            // 바뀌는 모습을 보고 싶어 .
+                            // 바뀌는 모습을 보고 싶어 .....
                             cell.usernameButton.setTitle(user.name, for: .normal)
                         }
                     }
