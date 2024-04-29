@@ -19,29 +19,7 @@ final class DetailContentView: UITableViewHeaderFooterView {
             updateUI()
         }
     }
-    
-//    var post: Post? {
-//
-//        didSet {
-//
-//            guard let ownerUid = post?.ownerUid else { return }
-//            guard let likes = post?.likes else { return }
-//
-//            Database.fetchUser(with: ownerUid) { (user) in
-//
-//                self.profileImageView.loadImage(with: user.profileImageUrl)
-//                self.userName.text = user.name
-//                self.titleLabel.text = self.post?.caption
-//
-//
-//            }
-//
-//            likesLabel.text = "\(likes)"
-//
-//        }
-//
-//
-//    }
+
     
     static let headerViewID = "DetailContentView"
     
