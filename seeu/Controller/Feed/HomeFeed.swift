@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import Kingfisher
 
 class HomeFeed: UITableViewController, MainCellDelegate {
     
@@ -28,14 +29,16 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
+        
+        fetchPost() // 데이터 불러오기
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        posts.removeAll() // 현재 posts 배열 비우기
-        fetchPost() // 데이터 불러오기
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        posts.removeAll() // 현재 posts 배열 비우기
+//        fetchPost() // 데이터 불러오기
+//    }
 
     // MARK: - Table view data source
 
@@ -54,16 +57,32 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         
         cell.delegate = self
         
-        cell.post = posts[indexPath.row]
+        let post = posts[indexPath.row]
+        cell.post = post
         
+        // 이미지 로드 및 업데이트
+        if let profileImageUrl = post.user?.profileImageUrl { // 수정된 부분: post에서 user의 profileImageUrl 가져옴
+            cell.profileImageView.kf.setImage(with: URL(string: profileImageUrl)) { result in
+                switch result {
+                case .success(_):
+                    // 이미지 로딩이 완료되면 셀을 업데이트
+                    cell.setNeedsLayout()
+                case .failure(let error):
+                    print("Error loading image: \(error)")
+                }
+            }
+        }
         
         // 댓글 수 업데이트
-        if let commentCount = posts[indexPath.row].comments?.count {
+        if let commentCount = post.comments?.count {
             cell.configureCommentCount(commentCount: commentCount)
         }
         
         return cell
     }
+
+
+
     
     // MARK: - MainCell Protocol
     
@@ -192,26 +211,88 @@ class HomeFeed: UITableViewController, MainCellDelegate {
 
 
     func fetchPost() {
-        POSTS_REF.observe(.childAdded) { (snapshot) in
+        POSTS_REF.observe(.childAdded) { [weak self] (snapshot) in
+            guard let self = self else { return }
             let postId = snapshot.key
             Database.fetchPost(with: postId) { post in
+                // 새로운 게시물을 배열에 추가
                 self.posts.append(post)
+
+                // 게시물을 가져온 후에 정렬
+                self.posts.sort { $0.creationDate > $1.creationDate }
+
+                // 테이블 뷰 리로드
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+
                 // 게시물 작성자의 UID를 사용하여 사용자 정보를 가져옴
                 Database.fetchUser(with: post.ownerUid) { user in
                     // 사용자 정보를 가져온 후에 셀에 적용
                     guard let index = self.posts.firstIndex(where: { $0.postId == postId }) else { return }
                     let indexPath = IndexPath(row: index, section: 0)
-                    if let cell = self.tableView.cellForRow(at: indexPath) as? MainCell {
-                        cell.profileImageView.loadImage(with: user.profileImageUrl)
-                        cell.usernameButton.setTitle(user.name, for: .normal)
+                    DispatchQueue.main.async {
+                        if let cell = self.tableView.cellForRow(at: indexPath) as? MainCell {
+                            // 이미지 로딩 중에도 해당 셀이 여전히 유효한지 확인
+                            guard cell.post?.postId == postId else { return }
+
+                            // Kingfisher 이미지 다운로드 작업 취소
+                            cell.profileImageView.kf.cancelDownloadTask()
+
+                            // 이미지가 로드되지 않은 경우에만 이미지 설정
+                            if cell.profileImageView.image == nil {
+                                // 프로필 이미지 설정
+                                if let profileImageUrl = user.profileImageUrl {
+                                    cell.profileImageView.kf.setImage(with: URL(string: profileImageUrl)) { result in
+                                        switch result {
+                                        case .success(_):
+                                            // 이미지 로딩이 완료되면 셀을 업데이트
+                                            cell.setNeedsLayout()
+                                        case .failure(let error):
+                                            print("Error loading image: \(error)")
+                                        }
+                                    }
+                                } else {
+                                    // 프로필 이미지가 없는 경우 기본 이미지 설정
+                                    cell.profileImageView.image = UIImage(named: "default_profile_image")
+                                }
+                            }
+                            cell.usernameButton.setTitle(user.name, for: .normal)
+                        }
                     }
                 }
-                // 게시물을 가져온 후에 정렬 및 테이블 뷰 리로드
-                self.posts.sort { $0.creationDate > $1.creationDate }
-                self.tableView.reloadData()
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     

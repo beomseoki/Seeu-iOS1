@@ -84,17 +84,10 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
             guard
                 let caption = captionTextView.text,
                 let currentUid = Auth.auth().currentUser?.uid else { return }
-    
-        // 이미지 파일 업로드 , 나중에 이미지를 추가할 때 사용해보기
-        //guard let uploadData = UIImage.jpegData(<#T##self: UIImage##UIImage#>)
         
         // 현재 시간을 가져오기
         let creationDate = Int(NSDate().timeIntervalSince1970)
-        
-        // 저장공간 업데이트, 흠 이미지 파일을 이용하는건데 , 빼고 해보자
-        //let filename = NSUUID().uuidString
-        //Storage.storage().reference().child("post_images").child(filename).putData(uploadData, metadata: <#T##StorageMetadata?#>, completion: <#T##(Result<StorageMetadata, Error>) -> Void#>)
-        
+
         
         // 게시물 데이터 정의
         let values = ["caption": caption,
