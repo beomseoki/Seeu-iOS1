@@ -38,8 +38,11 @@ class Comment {
         } else {
             self.creationDate = Date()
         }
+        
+        
     }
 }
+
 
     
     

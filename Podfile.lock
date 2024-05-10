@@ -59,12 +59,20 @@ PODS:
   - leveldb-library (1.22.2)
   - PromisesObjC (2.3.1)
   - RecaptchaInterop (100.0.0)
+  - RxCocoa (6.7.1):
+    - RxRelay (= 6.7.1)
+    - RxSwift (= 6.7.1)
+  - RxRelay (6.7.1):
+    - RxSwift (= 6.7.1)
+  - RxSwift (6.7.1)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Database
   - Firebase/Storage
   - Kingfisher
+  - RxCocoa (~> 6)
+  - RxSwift (~> 6)
 
 SPEC REPOS:
   trunk:
@@ -84,6 +92,9 @@ SPEC REPOS:
     - leveldb-library
     - PromisesObjC
     - RecaptchaInterop
+    - RxCocoa
+    - RxRelay
+    - RxSwift
 
 SPEC CHECKSUMS:
   Firebase: 63ce8ece0d43743dc28eacac0c6867a2d7fd5a9d
@@ -102,7 +113,10 @@ SPEC CHECKSUMS:
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  RxCocoa: f5609cb4637587a7faa99c5d5787e3ad582b75a4
+  RxRelay: 4151ba01152436b08271e08410135e099880eae5
+  RxSwift: b9a93a26031785159e11abd40d1a55bcb8057e52
 
-PODFILE CHECKSUM: 00afbf7b26362e00bbf4cffdbd96ceb7e648b57c
+PODFILE CHECKSUM: 8eea0b8b97ed0f68ba535c4c2a534f23fd0f7056
 
 COCOAPODS: 1.11.3

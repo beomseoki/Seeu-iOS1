@@ -50,6 +50,7 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         
         view.addSubview(captionTextView)
         captionTextView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 200) // 100
+        captionTextView.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         
         view.addSubview(shareButton)
         shareButton.anchor(top: captionTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 24, paddingLeft: 12, paddingBottom: 0, paddingRight: 24, width: 0, height: 40)

@@ -19,29 +19,7 @@ final class DetailContentView: UITableViewHeaderFooterView {
             updateUI()
         }
     }
-    
-//    var post: Post? {
-//
-//        didSet {
-//
-//            guard let ownerUid = post?.ownerUid else { return }
-//            guard let likes = post?.likes else { return }
-//
-//            Database.fetchUser(with: ownerUid) { (user) in
-//
-//                self.profileImageView.loadImage(with: user.profileImageUrl)
-//                self.userName.text = user.name
-//                self.titleLabel.text = self.post?.caption
-//
-//
-//            }
-//
-//            likesLabel.text = "\(likes)"
-//
-//        }
-//
-//
-//    }
+
     
     static let headerViewID = "DetailContentView"
     
@@ -152,8 +130,6 @@ final class DetailContentView: UITableViewHeaderFooterView {
         let view = UIView()
         view.backgroundColor = UIColor(w: 237)
         return view
-        
-        
     }()
     
     override init(reuseIdentifier: String?) {
@@ -162,7 +138,7 @@ final class DetailContentView: UITableViewHeaderFooterView {
         self.backgroundView = UIView()
         self.backgroundView?.backgroundColor = .white
 
-        // 레이아웃 설정 
+        // 레이아웃 설정
         designView()
         
         // 좋아요, 댓글 버튼과 숫자
@@ -200,6 +176,14 @@ final class DetailContentView: UITableViewHeaderFooterView {
                 commentLabel.text = "\(commentsCount)"
             }
         
+        // 게시물 작성 시간 표시
+        if let creationDate = post.creationDate {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy.MM.dd. HH:mm"
+                let dateString = dateFormatter.string(from: creationDate)
+                timeLabel.text = dateString
+            }
+        
         
         
         
@@ -207,50 +191,37 @@ final class DetailContentView: UITableViewHeaderFooterView {
     }
     
     func designView() {
-        
         self.addSubview(self.profileImageView)
         self.addSubview(self.userName)
         self.addSubview(self.timeLabel)
         self.addSubview(self.titleLabel)
         self.addSubview(self.separator)
-        
 
-        
-        
         self.profileImageView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 24, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         self.userName.anchor(top: self.topAnchor, left: self.profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         self.timeLabel.anchor(top: self.userName.bottomAnchor, left: self.profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        self.titleLabel.anchor(top: self.profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: -40, paddingLeft: 24, paddingBottom: 0, paddingRight: -24, width: 0, height: 0)
+        // titleLabel의 제약 조건 수정
+        self.titleLabel.anchor(top: self.profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: -20, paddingLeft: 24, paddingBottom: 5, paddingRight: 10, width: 0, height: 0)
+
         self.separator.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: -10, paddingRight: -8, width: 0, height: 1)
-
-
     }
-    
-    
+
     func setupHeaderView() {
         horizontalStackView.addArrangedSubview(likeButton)
         horizontalStackView.addArrangedSubview(commentButton)
         
-//        addSubview(horizontalStackView)
-//        horizontalStackView.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 15)
-//
-//        addSubview(likesLabel)
-//        likesLabel.anchor(top: titleLabel.bottomAnchor, left: likeButton.rightAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-//
-//        addSubview(commentLabel)
-//        commentLabel.anchor(top: titleLabel.bottomAnchor, left: commentButton.rightAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
         addSubview(horizontalStackView)
-        horizontalStackView.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: -30, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 15)
+        horizontalStackView.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: -10, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 15)
         
         addSubview(likesLabel)
-        likesLabel.anchor(top: titleLabel.bottomAnchor, left: likeButton.rightAnchor, bottom: nil, right: nil, paddingTop: -30, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        likesLabel.anchor(top: titleLabel.bottomAnchor, left: likeButton.rightAnchor, bottom: nil, right: nil, paddingTop: -10, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         addSubview(commentLabel)
-        commentLabel.anchor(top: titleLabel.bottomAnchor, left: commentButton.rightAnchor, bottom: nil, right: nil, paddingTop: -30, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
+        commentLabel.anchor(top: titleLabel.bottomAnchor, left: commentButton.rightAnchor, bottom: nil, right: nil, paddingTop: -10, paddingLeft: -5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
+
+
     
     
     

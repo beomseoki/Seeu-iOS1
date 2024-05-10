@@ -153,9 +153,13 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         Auth.auth().createUser(withEmail: email, password: password) { user, error in
             
-            // 사용자의 대한 에러가 뜰경우
+            // 사용자의 대한 에러와 회원가입 실패
             if let error = error {
                 print("아이디가 생성되지 않았습니다, ", error.localizedDescription)
+                let alertController = UIAlertController(title: "회원가입 실패", message: "회원정보를 다시한번 입력해주세요.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             

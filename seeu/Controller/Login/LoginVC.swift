@@ -79,60 +79,7 @@ class LoginVC: UIViewController {
         
         return button
     }()
-    
-//    let AccoutButton: UIButton = {
-//        let button = UIButton(type: .system)
-//
-//        button.setTitle("회원가입", for: .normal)
-//
-//
-//
-//
-//    }()
-    
-    
-    
-    // MARK: - 이메일, 이미지 추가할것들 적어놈
-    
 
-    
-//    let titleImageView: UIImageView = {
-//        let imageView = UIImageView()
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "learning.png")
-//        imageView.contentMode = .scaleAspectFit
-//        imageView.backgroundColor = UIColor(red: 0/255, green: 120/255, blue: 175/255, alpha: 1)
-//
-//        return imageView
-//
-//
-//    }()
-    
-//    let descriptionLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-//        label.textColor = .black
-//        label.textAlignment = .center
-//        label.text = "강의 정보를 더 편하고 쉽게"
-//        label.numberOfLines = 1
-//        return label
-//    }()
-//
-//    let titleLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-//        label.textColor = UIColor(r: 198, g: 41, b: 23)
-//        label.textAlignment = .center
-//        label.text = "강의뭐봐"
-//        label.numberOfLines = 1
-//        return label
-//    }()
-//
-    
-    
-    
-    
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,11 +105,7 @@ class LoginVC: UIViewController {
         
         
     }
-    
-//    override func viewDidDisappear(_ animated: Bool) {
-//        navigationController?.title = "행복"
-//    }
-//
+
     // MARK: - 로그인 쪽
     
 
@@ -187,44 +130,16 @@ class LoginVC: UIViewController {
             // 가져오는데 에러가 뜨는경우
             if let error = error {
                 print("해당 계정에 로그인 할 수 없습니다." , error.localizedDescription)
+                let alertController = UIAlertController(title: "로그인 실패", message: "이메일과 비밀번호가 올바르지 않습니다.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             
             // 이메일 , 비번을 가져오는데 성공한 경우
             print("성공적으로 로그인 됨 ")
-            
-            // MARK: - 2
-            
-
-            
-            //let win = self.view.window?.rootViewController as? MainTabVC
-            //guard let mainTabVC = win else { return }
-            
-//            let win = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-//            guard let mainTabVC = win?.rootViewController as? MainTabVC else { return }
-            //guard let mainTabVC = UIApplication.shared.keyWindow?.rootViewController as? MainTabVC else { return }
-            
-            //*guard let mainTabVC = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController as? MainTabVC else { return }
-            
-            
-            
-            
-            // 그래서 이제 우리는 maintabVC에 성공적으로 키보드가 나올 수 있도록? 했으면 보여주는거임
-            //*mainTabVC.configureViewControllers()
-            
-            //self.navigationController?.pushViewController(mainTabVC, animated: true)
-            
-            // 로그인 컨트롤러 사라지게
-            //*self.dismiss(animated: true, completion: nil)
-            
-            
-            
-            
-            
-            
-//            // 겹치게 되면 이 코드는 다음 창을 보여줌 / 이렇게 하면 우리가 로그아웃하고 , 다시 로그인하면 계속해서 그 상황이 겹쳐져서 느려지게 되는거임
             let mainTabVC = MainTabVC()
-            //self.navigationController?.pushViewController(mainTabVC, animated: true)
             mainTabVC.modalPresentationStyle = .fullScreen
             self.present(mainTabVC, animated: true, completion: nil)
             

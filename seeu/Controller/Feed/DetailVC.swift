@@ -1,4 +1,3 @@
-//
 //  DetailVC.swift
 //  seeu
 //
@@ -17,6 +16,8 @@ class DetailVC: UIViewController {
     var posts = [Post]()
     var comments = [Comment]()
     var postId: String?
+    
+    
     
     
     //수정중
@@ -197,6 +198,7 @@ class DetailVC: UIViewController {
                 print("Comment uploaded successfully") // 댓글이 성공적으로 업로드되었는지 확인
                 self.commentTextField.text = nil // 게시를 한 후 텍스트를 빈칸으로 만들기 위해
                 self.fetchData()
+                
             }
         }
     }
@@ -227,7 +229,7 @@ class DetailVC: UIViewController {
             }
             
             dispatchGroup.notify(queue: .main) {
-                // 데이터가 준비되면 UI를 업데이트합니다.
+                // 데이터가 준비되면 UI를 업데이트
                 self.post = post
                 self.comments = comments
                 self.tableView.reloadData()
@@ -252,9 +254,7 @@ extension DetailVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell") as! DetailCell
-        _ = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 500)) // 수정중
-        cell.backgroundColor = .red
-        cell.comment = comments[indexPath.item]
+        cell.comment.onNext(comments[indexPath.item])
         return cell
     }
     
@@ -283,6 +283,3 @@ extension DetailVC: UITableViewDataSource, UITableViewDelegate {
     
     
 }
-
-
-

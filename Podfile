@@ -10,6 +10,9 @@ target 'seeu' do
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
   pod 'Kingfisher'
+  pod 'RxSwift', '~> 6'
+  pod 'RxCocoa', '~> 6'
+
 
 
 end

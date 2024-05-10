@@ -30,22 +30,18 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
         
-        fetchPost() // 데이터 불러오기
+        //fetchPost() // 데이터 불러오기
 
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        posts.removeAll() // 현재 posts 배열 비우기
-//        fetchPost() // 데이터 불러오기
-//    }
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            posts.removeAll() // 현재 posts 배열 비우기
+            fetchPost() // 데이터 불러오기
+        }
 
     // MARK: - Table view data source
 
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//
-//        return 0
-//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -81,6 +77,8 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         return cell
     }
 
+    
+    
 
 
     
@@ -88,7 +86,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
     
     func handleUsernameTapped(for cell: MainCell) {
         
-        // 현재 MainCell 을 참조하고 있기 때문에 우리는 메인셀에 있는 post에 셀들을 가져올 수 있는거임 
+        // 현재 MainCell 을 참조하고 있기 때문에 우리는 메인셀에 있는 post에 셀들을 가져올 수 있는거임
         guard let post = cell.post else { return }
         
         let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
@@ -110,7 +108,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
             }
 
         } else {
-            // 좋아요 클릭 가능 
+            // 좋아요 클릭 가능
             post.adjustLikes(addLike: true) { likes in
                 cell.likesLabel.text = "\(likes)"
                 cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
@@ -183,9 +181,7 @@ class HomeFeed: UITableViewController, MainCellDelegate {
                 // 그 다음에 네비게이션으로 변경 해줬으니깐 이제 보내줘야지
                 navController.modalPresentationStyle = .fullScreen
                 self.present(navController, animated: true, completion: nil)
-                
-                
-                //*self.navigationController?.pushViewController(navController, animated: true)
+
             
                 print("로그아웃 성공")
                 
@@ -214,6 +210,10 @@ class HomeFeed: UITableViewController, MainCellDelegate {
         POSTS_REF.observe(.childAdded) { [weak self] (snapshot) in
             guard let self = self else { return }
             let postId = snapshot.key
+            // 중복되는 게시물이 있는지 확인
+            if self.posts.contains(where: { $0.postId == postId }) {
+                return // 이미 배열에 있는 경우 처리하지 않음
+            }
             Database.fetchPost(with: postId) { post in
                 // 새로운 게시물을 배열에 추가
                 self.posts.append(post)
@@ -229,37 +229,39 @@ class HomeFeed: UITableViewController, MainCellDelegate {
                 // 게시물 작성자의 UID를 사용하여 사용자 정보를 가져옴
                 Database.fetchUser(with: post.ownerUid) { user in
                     // 사용자 정보를 가져온 후에 셀에 적용
-                    guard let index = self.posts.firstIndex(where: { $0.postId == postId }) else { return }
-                    let indexPath = IndexPath(row: index, section: 0)
-                    DispatchQueue.main.async {
-                        if let cell = self.tableView.cellForRow(at: indexPath) as? MainCell {
-                            // 이미지 로딩 중에도 해당 셀이 여전히 유효한지 확인
-                            guard cell.post?.postId == postId else { return }
+                    guard let index = self.posts.firstIndex(where: { $0.postId == postId }),
+                          let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? MainCell else { return }
 
-                            // Kingfisher 이미지 다운로드 작업 취소
-                            cell.profileImageView.kf.cancelDownloadTask()
+                    // 이미지 로딩 중에도 해당 셀이 여전히 유효한지 확인
+                    guard cell.post?.postId == postId else { return }
 
-                            // 이미지가 로드되지 않은 경우에만 이미지 설정
-                            if cell.profileImageView.image == nil {
-                                // 프로필 이미지 설정
-                                if let profileImageUrl = user.profileImageUrl {
-                                    cell.profileImageView.kf.setImage(with: URL(string: profileImageUrl)) { result in
-                                        switch result {
-                                        case .success(_):
-                                            // 이미지 로딩이 완료되면 셀을 업데이트
-                                            cell.setNeedsLayout()
-                                        case .failure(let error):
-                                            print("Error loading image: \(error)")
-                                        }
-                                    }
-                                } else {
-                                    // 프로필 이미지가 없는 경우 기본 이미지 설정
-                                    cell.profileImageView.image = UIImage(named: "default_profile_image")
+                    // Kingfisher 이미지 다운로드 작업 취소
+                    cell.profileImageView.kf.cancelDownloadTask()
+
+                    // 이미지가 로드되지 않은 경우에만 이미지 설정
+                    if cell.profileImageView.image == nil {
+                        // 프로필 이미지 설정
+                        if let profileImageUrl = user.profileImageUrl {
+                            cell.profileImageView.kf.setImage(with: URL(string: profileImageUrl)) { result in
+                                switch result {
+                                case .success(_):
+                                    // 이미지 로딩이 완료되면 셀을 업데이트
+                                    cell.setNeedsLayout()
+                                case .failure(let error):
+                                    print("Error loading image: \(error)")
                                 }
                             }
-                            // 바뀌는 모습을 보고 싶어 .......?
-                            cell.usernameButton.setTitle(user.name, for: .normal)
+                        } else {
+                            // 프로필 이미지가 없는 경우 기본 이미지 설정
+                            cell.profileImageView.image = UIImage(named: "default_profile_image")
                         }
+                    }
+                    // 바뀌는 모습을 보고 싶어 .......?
+                    cell.usernameButton.setTitle(user.name, for: .normal)
+
+                    // 댓글 수 업데이트
+                    if let commentCount = post.comments?.count {
+                        cell.configureCommentCount(commentCount: commentCount)
                     }
                 }
             }
@@ -269,34 +271,6 @@ class HomeFeed: UITableViewController, MainCellDelegate {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = posts[indexPath.row]
         
