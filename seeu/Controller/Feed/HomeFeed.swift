@@ -251,12 +251,14 @@ class HomeFeed: UITableViewController, MainCellDelegate {
                                     print("Error loading image: \(error)")
                                 }
                             }
+
                         } else {
                             // 프로필 이미지가 없는 경우 기본 이미지 설정
                             cell.profileImageView.image = UIImage(named: "default_profile_image")
+
+                            cell.usernameButton.setTitle(user.name, for: .normal)
                         }
                     }
-                    // 바뀌는 모습을 보고 싶어 .......?
                     cell.usernameButton.setTitle(user.name, for: .normal)
 
                     // 댓글 수 업데이트
