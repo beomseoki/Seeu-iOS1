@@ -10,6 +10,7 @@ import Firebase
 
 extension UIView {
     
+    
     func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
         
         translatesAutoresizingMaskIntoConstraints = false
@@ -178,8 +179,27 @@ extension Database {
         }
     }
 
-
-
-
-
 }
+
+
+
+// 키보드 숨기기
+//extension UIViewController: UIGestureRecognizerDelegate {
+//    func hideKeyboardWhenTappedAround() {
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+//        tap.cancelsTouchesInView = false
+//        tap.delegate = self
+//        view.addGestureRecognizer(tap)
+//        print("Tap gesture recognizer added") // 디버깅을 위한 로그
+//    }
+//    
+//    @objc func dismissKeyboard() {
+//        view.endEditing(true)
+//    }
+//    
+//    // 제스처 인식기 델리게이트 메서드
+//    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return true
+//    }
+//}
+

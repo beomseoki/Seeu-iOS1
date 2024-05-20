@@ -116,13 +116,4 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
             return
         }
     }
-    
-    func reloadData() {
-        
-        
-        
-    }
-    
-    
-    
 }

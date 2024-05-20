@@ -28,25 +28,39 @@ class DetailVC: UIViewController {
     
     lazy var containerView: UIView = {
         let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-
+        containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        containerView.backgroundColor = .white
+        containerView.autoresizingMask = .flexibleHeight
+        
         containerView.addSubview(postButton)
-        postButton.anchor(top: nil, left: nil, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 50, height: 0)
-        postButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        
         containerView.addSubview(commentTextField)
-        commentTextField.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: postButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        
-        
         
         // 구분선
         let separatorView = UIView()
         separatorView.backgroundColor = UIColor(r: 230, g: 230, b: 230)
         containerView.addSubview(separatorView)
-        separatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
         
-        containerView.backgroundColor = .white
+        // 제약 조건 설정
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+        commentTextField.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            postButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            postButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            postButton.widthAnchor.constraint(equalToConstant: 50),
+            postButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            commentTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            commentTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            commentTextField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+            commentTextField.trailingAnchor.constraint(equalTo: postButton.leadingAnchor, constant: -8),
+            
+            separatorView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            separatorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 0.5)
+        ])
         
         return containerView
     }()
@@ -62,10 +76,6 @@ class DetailVC: UIViewController {
         let tf = UITextField()
         tf.placeholder = "댓글을 남겨보세요"
         tf.font = UIFont.systemFont(ofSize: 14)
-        
-        //tf.layer.cornerRadius = 14.0
-        //tf.layer.borderWidth = 1
-        //tf.layer.borderColor = UIColor.gray.cgColor
         
         return tf
     }()
@@ -93,33 +103,30 @@ class DetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-
+        // 레이아웃 설정
+        //adjust()
+        
+        //view.backgroundColor = .white
+        tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DetailCell.self, forCellReuseIdentifier: "DetailCell")
         tableView.register(DetailContentView.self, forHeaderFooterViewReuseIdentifier: "DetailContentView")
-        //tableView.sectionFooterHeight = 0
         tableView.sectionHeaderHeight = UITableView.automaticDimension // 1
 
         navigationItem.title = "Comments"
         
-        // 레이아웃 설정
+        
+        
         adjust()
-        
-        //setup()
-        
+
         // 댓글 기능 수정
         fetchData()
-        
 
     }
     
     
-    // 화면 클릭시 키보드 내리기
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
+
         
 
 
@@ -128,6 +135,7 @@ class DetailVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        //hideKeyboardWhenTappedAround()
 
     }
     
@@ -136,14 +144,21 @@ class DetailVC: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
-    // 키보드 구현!
-    
-    override var inputAccessoryView: UIView? {
-        get {
-            return containerView
-        }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.layoutIfNeeded()
     }
 
+    
+    // 키보드 구현!
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    override var inputAccessoryView: UIView? {
+        return containerView
+    }
     override var canBecomeFirstResponder: Bool {
         return true
     }
@@ -165,7 +180,6 @@ class DetailVC: UIViewController {
         
         tableView.separatorStyle = .none
         tableView.reloadData()
-        tableView.layoutIfNeeded()
         
         
     }
@@ -276,10 +290,6 @@ extension DetailVC: UITableViewDataSource, UITableViewDelegate {
         return 150
         
     }
-    
-
-    
-    
-    
-    
 }
+
+
