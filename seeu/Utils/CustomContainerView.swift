@@ -7,14 +7,27 @@
 
 import UIKit
 
+
+protocol CustomContainerViewDelegate: AnyObject {
+    func heightForTextField() -> CGFloat
+}
+
 class CustomContainerView: UIView {
+    weak var delegate: CustomContainerViewDelegate?
+
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 50)
+        let height = delegate?.heightForTextField() ?? 50
+        return CGSize(width: UIView.noIntrinsicMetric, height: height + 16)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.invalidateIntrinsicContentSize()
+        invalidateIntrinsicContentSize()
     }
 }
+
+
+
+
+
 

@@ -27,43 +27,43 @@ class DetailVC: UIViewController {
     
     
     lazy var containerView: UIView = {
-        let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-        containerView.backgroundColor = .white
-        containerView.autoresizingMask = .flexibleHeight
+    let containerView = UIView()
+    containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+    containerView.backgroundColor = .white
+    containerView.autoresizingMask = .flexibleHeight
+    
+    containerView.addSubview(postButton)
+    containerView.addSubview(commentTextField)
+    
+    // 구분선
+    let separatorView = UIView()
+    separatorView.backgroundColor = UIColor(r: 230, g: 230, b: 230)
+    containerView.addSubview(separatorView)
+    
+    // 제약 조건 설정
+    postButton.translatesAutoresizingMaskIntoConstraints = false
+    commentTextField.translatesAutoresizingMaskIntoConstraints = false
+    separatorView.translatesAutoresizingMaskIntoConstraints = false
+    
+    NSLayoutConstraint.activate([
+        postButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+        postButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+        postButton.widthAnchor.constraint(equalToConstant: 50),
+        postButton.heightAnchor.constraint(equalToConstant: 30),
         
-        containerView.addSubview(postButton)
-        containerView.addSubview(commentTextField)
+        commentTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+        commentTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+        commentTextField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+        commentTextField.trailingAnchor.constraint(equalTo: postButton.leadingAnchor, constant: -8),
         
-        // 구분선
-        let separatorView = UIView()
-        separatorView.backgroundColor = UIColor(r: 230, g: 230, b: 230)
-        containerView.addSubview(separatorView)
-        
-        // 제약 조건 설정
-        postButton.translatesAutoresizingMaskIntoConstraints = false
-        commentTextField.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            postButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            postButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            postButton.widthAnchor.constraint(equalToConstant: 50),
-            postButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            commentTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            commentTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-            commentTextField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
-            commentTextField.trailingAnchor.constraint(equalTo: postButton.leadingAnchor, constant: -8),
-            
-            separatorView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            separatorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            separatorView.heightAnchor.constraint(equalToConstant: 0.5)
-        ])
-        
-        return containerView
-    }()
+        separatorView.topAnchor.constraint(equalTo: containerView.topAnchor),
+        separatorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+        separatorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+        separatorView.heightAnchor.constraint(equalToConstant: 0.5)
+    ])
+    
+    return containerView
+}()
 
 
     
@@ -123,6 +123,9 @@ class DetailVC: UIViewController {
         // 댓글 기능 수정
         fetchData()
 
+        // 키보드 내리는 기능 
+        hideKeyboardWhenTappedAround()
+
     }
     
     
@@ -135,7 +138,7 @@ class DetailVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        //hideKeyboardWhenTappedAround()
+
 
     }
     
@@ -146,7 +149,9 @@ class DetailVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.layoutIfNeeded()
+        containerView.invalidateIntrinsicContentSize()
+        containerView.layoutIfNeeded()
+
     }
 
     
@@ -157,11 +162,28 @@ class DetailVC: UIViewController {
     }
     
     override var inputAccessoryView: UIView? {
-        return containerView
+        let accessoryView = containerView
+        accessoryView.frame.size = CGSize(width: view.frame.width, height: 50)
+        return accessoryView
     }
+
     override var canBecomeFirstResponder: Bool {
         return true
     }
+
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = true
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+
+        // 키보드 강제로 내리는 코드 
+        commentTextField.resignFirstResponder()
+    }
+
         
     
     func adjust() {

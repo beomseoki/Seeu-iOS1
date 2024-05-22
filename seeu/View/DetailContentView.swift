@@ -143,6 +143,8 @@ final class DetailContentView: UITableViewHeaderFooterView {
         
         // 좋아요, 댓글 버튼과 숫자
         setupHeaderView()
+        
+        self.isUserInteractionEnabled = true
 
     }
         

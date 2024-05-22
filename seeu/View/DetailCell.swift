@@ -55,6 +55,9 @@ class DetailCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         bindUI()
+        
+        // 탭 비활성화
+        self.isUserInteractionEnabled = true
     }
     
     required init?(coder: NSCoder) {
