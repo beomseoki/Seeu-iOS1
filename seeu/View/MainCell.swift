@@ -21,9 +21,6 @@ class MainCell: UITableViewCell {
             guard let likes = post?.likes else { return }
             
             Database.fetchUser(with: ownerUid) { (user) in
-                
-                self.profileImageView.loadImage(with: user.profileImageUrl)
-                self.usernameButton.setTitle(user.name, for: .normal)
                 self.titleLabel.text = self.post?.caption
                 
                 
@@ -160,85 +157,89 @@ class MainCell: UITableViewCell {
         
         self.backgroundColor = .white
         
-        
-        
+        setupSubviews()
+        setupConstraints()
+    }
+
+    private func setupSubviews() {
+        // 닉네임 컨테이너 설정
         self.contentView.addSubview(self.nicknameContainer)
         
-        // 수정 중  , 메인으로 서브뷰를 넣어서 이미지 크기 조절 후 , 닉네임도 맞게 조절함 , 그에 따라서 stackview를 만든 의미가 사라졌기 때문에 수정 해야함
+        // 프로필 이미지 설정
         self.contentView.addSubview(self.profileImageView)
-        profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
-        profileImageView.layer.cornerRadius = 40 / 2
+        profileImageView.layer.cornerRadius = 20 // 40 / 2
         
-        addSubview(usernameButton)
-        usernameButton.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        usernameButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
+        // 유저 이름 버튼 설정
+        self.contentView.addSubview(self.usernameButton)
         
-        // 시간
-        //self.contentView.addSubview(self.timeLabel)
-        
-        
-        self.contentView.addSubview(self.titleLabel)
-        
-        // 좋아요 , 댓글 버튼 
-        configureActionButtons()
-        //self.contentView.addSubview(self.container)
-        
-        // 좋아요 몇 개 , 댓글 몇 개
-        self.contentView.addSubview(self.likesLabel)
-        likesLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: likeButton.rightAnchor, paddingTop: 10, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        self.contentView.addSubview(self.commentLabel)
-        commentLabel.anchor(top: titleLabel.bottomAnchor, left: nil, bottom: nil, right: commentButton.rightAnchor, paddingTop: 10, paddingLeft: 3, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        
-        self.contentView.addSubview(self.separator)
-        
-        
-        //self.nicknameContainer.addArrangedSubview(self.profileImageView)
-        //self.nicknameContainer.addArrangedSubview(self.nicknameLabel)
+        // 타임 라벨을 닉네임 컨테이너에 추가
         self.nicknameContainer.addArrangedSubview(self.timeLabel)
 
+        // 타이틀 라벨 설정
+        self.contentView.addSubview(self.titleLabel)
         
-        // 레이아웃 설정
+        // 좋아요, 댓글 버튼 설정
+        configureActionButtons()
+        
+        // 좋아요 라벨 설정
+        self.contentView.addSubview(self.likesLabel)
+        
+        // 댓글 라벨 설정
+        self.contentView.addSubview(self.commentLabel)
+        
+        // 구분선 설정
+        self.contentView.addSubview(self.separator)
+        
+        // Auto Layout을 위해 TranslatesAutoresizingMaskIntoConstraints를 false로 설정
         self.nicknameContainer.translatesAutoresizingMaskIntoConstraints = false
         self.profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
+        self.usernameButton.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        //시간
-        //self.timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.likesLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.commentLabel.translatesAutoresizingMaskIntoConstraints = false
         self.separator.translatesAutoresizingMaskIntoConstraints = false
+    }
 
-        
-        //Layout 조절하기 , x
-        
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // 수정중
+            // 닉네임 컨테이너 레이아웃
             self.nicknameContainer.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
             self.nicknameContainer.leadingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor, constant: 24),
             self.nicknameContainer.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -24),
             self.nicknameContainer.heightAnchor.constraint(equalToConstant: 24),
-
-
-            // 게시글 내용
+            
+            // 프로필 이미지 레이아웃
+            self.profileImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
+            self.profileImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 8),
+            self.profileImageView.widthAnchor.constraint(equalToConstant: 40),
+            self.profileImageView.heightAnchor.constraint(equalToConstant: 40),
+            
+            // 유저 이름 버튼 레이아웃
+            self.usernameButton.centerYAnchor.constraint(equalTo: self.profileImageView.centerYAnchor),
+            self.usernameButton.leadingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor, constant: 8),
+            
+            // 타이틀 라벨 레이아웃
             self.titleLabel.topAnchor.constraint(equalTo: self.nicknameContainer.bottomAnchor, constant: 20),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 24),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -24),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -24),
             
+            // 좋아요 라벨 레이아웃
+            self.likesLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
+            self.likesLabel.trailingAnchor.constraint(equalTo: self.likeButton.trailingAnchor),
             
+            // 댓글 라벨 레이아웃
+            self.commentLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
+            self.commentLabel.trailingAnchor.constraint(equalTo: self.commentButton.trailingAnchor),
+            
+            // 분리선 레이아웃
             self.separator.heightAnchor.constraint(equalToConstant: 1),
             self.separator.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 8),
             self.separator.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -8),
             self.separator.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 5)
-
-
-        
         ])
-        
     }
+
     
     // MARK: - Handlers
     

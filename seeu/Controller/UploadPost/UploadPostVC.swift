@@ -16,9 +16,8 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
     
     let captionTextView: UITextView = {
         let tv = UITextView()
-        //tv.backgroundColor = UIColor.systemGroupedBackground
         tv.backgroundColor = UIColor.white
-        tv.font = UIFont.systemFont(ofSize: 20) // 12
+        tv.font = UIFont.systemFont(ofSize: 20)
         return tv
     }()
     
@@ -38,11 +37,8 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        //navigationController?.navigationBar.isHidden = false
-        
         captionTextView.delegate = self
-        
-        
+
         navigationController?.navigationBar.topItem?.title = "글쓰기"
         captionTextView.text = "텍스트를 입력하세요"
         captionTextView.textColor = UIColor.lightGray
@@ -62,6 +58,11 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
 
     }
     
+    // 키보드 내리기
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            view.endEditing(true)
+        }
+    
     // MARK: - UiTextView delegate
     
     func textViewDidChange(_ textView: UITextView) {
@@ -73,15 +74,13 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         }
         
         shareButton.isEnabled = true
-        //shareButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         shareButton.backgroundColor = UIColor(red: 135/255, green: 190/223, blue: 223/255, alpha: 1)
     
         }
     
 
-    // 데이터들 가져와서 게시하는거임
+    // 데이터를 통해 게시하는거임
     @objc func handleSharePost() {
-        
             guard
                 let caption = captionTextView.text,
                 let currentUid = Auth.auth().currentUser?.uid else { return }
@@ -102,21 +101,17 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         // 게시글 아이디를 통해서 업로드를 하면 , 그거에 대해서 정보들이 업로드 되면 피드로 돌아가기
         postId.updateChildValues(values) { err, ref in
             
-            //유저의 게시글을 뽑아오기위해서 적었으며, 위에 게시글 아이디를 가져온 후 현재 아이디를 통해서 밑으로 내려가서 포스트 아이디 1인 ket 정보들을 가져올 수 있게 한거임 (앞서 설정한거처럼 ) / 유저 프로필 업뎃용임
+            // 유저 프로필 업뎃용
             guard let postKey = postId.key else { return }
             USER_POSTS_REF.child(currentUid).updateChildValues([postKey: 1])
-            //print(currentUid)
-            
-            
-            // 값들을 가지고 제대로 되면 이제 다시 홈 피드로 돌아오는거지
+
+            // 값들을 가지고 제대로 되면 이제 다시 홈 피드
             self.dismiss(animated: true) {
                 self.tabBarController?.selectedIndex = 0
             }
             
         }
-        
-        
-        
+
     }
     
     
@@ -152,10 +147,5 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
             captionTextView.textColor = UIColor.black
         }
     }
-    
-
-    
-
-
 
 }

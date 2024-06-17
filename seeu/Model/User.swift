@@ -19,10 +19,7 @@ class User {
     init(uid: String, dictionary: Dictionary<String, AnyObject>) { //uid를 통해서 키와 벨류값을 찾는 개념
         
         self.uid = uid
-        
-//        if let username = dictionary["username"] as? String {
-//            self.username = username
-//        }
+
         
         if let name = dictionary["name"] as? String {
             self.name = name

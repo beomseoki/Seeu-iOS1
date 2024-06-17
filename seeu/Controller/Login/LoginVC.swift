@@ -15,14 +15,12 @@ class LoginVC: UIViewController {
     
     let logoContainerView: UIView = {
         let view = UIView()
-        //let logoImageView = UIImageView(image: #imageLiteral(resourceName: "logo_white")) //여기에 이미지 넣어서 이쁘게 가능 #imageliteral()을 이용하면 됨
         let logoImageView = UIImageView(image: #imageLiteral(resourceName: "coconut . (2)"))
         logoImageView.contentMode = .scaleAspectFill
         view.addSubview(logoImageView)
         logoImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)
         logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        //view.backgroundColor = UIColor(red: 0/255, green: 120/255, blue: 175/255, alpha: 1)
         view.backgroundColor = UIColor(red: 98/255, green: 206/255, blue: 203/255, alpha: 1)
         return view
     }()
@@ -32,7 +30,6 @@ class LoginVC: UIViewController {
         let tf = UITextField()
         tf.placeholder = "이메일"
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        //tf.frame.size.height = 48
         tf.layer.cornerRadius = 5
         tf.clipsToBounds = true
         tf.borderStyle = .roundedRect
@@ -45,7 +42,6 @@ class LoginVC: UIViewController {
         let tf = UITextField()
         tf.placeholder = "비밀번호"
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        //tf.frame.size.height = 48
         tf.layer.cornerRadius = 10
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -58,9 +54,8 @@ class LoginVC: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("로그인", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        //button.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
         button.backgroundColor = UIColor(red: 130/255, green: 210/255, blue: 205/255, alpha: 1)
-        button.isEnabled = false // 처음부터 적용안된다고 먼저 말해놔야지
+        button.isEnabled = false
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return button
@@ -71,11 +66,9 @@ class LoginVC: UIViewController {
         
         let attributedTitle = NSMutableAttributedString(string: "계정을 가지고 있지 않으신가요?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         attributedTitle.append(NSAttributedString(string: "회원가입", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor:  UIColor(red: 0/255, green: 0/223, blue: 0/255, alpha: 1)]))
-        //UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         button.setAttributedTitle(attributedTitle, for: .normal)
-        //사이즈 14
-        
+
         
         return button
     }()
@@ -86,8 +79,8 @@ class LoginVC: UIViewController {
         
         //background color
         view.backgroundColor = .white
-        // 내비게이션 위에 막대 없애기
         
+        // 내비게이션 위에 막대 없애기
         navigationController?.navigationBar.isHidden = true
         
         navigationController?.navigationBar.barStyle = .black
@@ -105,6 +98,10 @@ class LoginVC: UIViewController {
         
         
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            view.endEditing(true)
+        }
 
     // MARK: - 로그인 쪽
     
@@ -188,15 +185,8 @@ class LoginVC: UIViewController {
         
         view.addSubview(stackView)
         stackView.anchor(top: logoContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 45, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 180) // 140
-        
-        
-//        view.addSubview(descriptionLabel)     설명창 넣어보는거
-//        descriptionLabel.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 50, paddingLeft: 50, paddingBottom: 0, paddingRight: 50, width: 0, height: 1000)
-        
-    }
-    
 
-    
+    }
 
 }
 

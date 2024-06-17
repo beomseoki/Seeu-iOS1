@@ -16,16 +16,9 @@ class DetailVC: UIViewController {
     var posts = [Post]()
     var comments = [Comment]()
     var postId: String?
-    
-    
-    
-    
-    //수정중
     var post: Post? // post 멤버 추가
     
-   
-    
-    
+
     lazy var containerView: UIView = {
     let containerView = UIView()
     containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -65,18 +58,11 @@ class DetailVC: UIViewController {
     return containerView
 }()
 
-
-    
-
-    
-
-    
     
     lazy var commentTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "댓글을 남겨보세요"
         tf.font = UIFont.systemFont(ofSize: 14)
-        
         return tf
     }()
     
@@ -102,11 +88,6 @@ class DetailVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 레이아웃 설정
-        //adjust()
-        
-        //view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
@@ -115,9 +96,6 @@ class DetailVC: UIViewController {
         tableView.sectionHeaderHeight = UITableView.automaticDimension // 1
 
         navigationItem.title = "Comments"
-        
-        
-        
         adjust()
 
         // 댓글 기능 수정
@@ -128,11 +106,6 @@ class DetailVC: UIViewController {
 
     }
     
-    
-
-        
-
-
     
     // 상세페이지에 들어갔을 때 탭바를 없애고, 다시 나왔을 때 나타날 수 있게 설정
     override func viewWillAppear(_ animated: Bool) {

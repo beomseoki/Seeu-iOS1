@@ -10,19 +10,18 @@ import UIKit
 class UserProfileHeader: UICollectionViewCell {
     
     var user: User? {
-        
         didSet {
+            guard oldValue?.profileImageUrl != user?.profileImageUrl else { return }
             
-            let fullName = user?.name
-            nameLabel.text = fullName
+            nameLabel.text = user?.name
             
             guard let profileImageUrl = user?.profileImageUrl else { return }
             
             profileImageView.loadImage(with: profileImageUrl)
             print("이미지 로드 성공했다")
-            
         }
     }
+
     
     let profileImageView: UIImageView = {
         let iv = UIImageView()
@@ -79,10 +78,8 @@ class UserProfileHeader: UICollectionViewCell {
         
         addSubview(profileImageView)
         profileImageView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: nil, paddingTop: 16, paddingLeft: 105, paddingBottom: 0, paddingRight: 12, width: 200, height: 200)
-        profileImageView.layer.cornerRadius = 200 / 2 // 너비와 높이의 값의 따라서 나누게 되면 동그라미가 제대로 됨 (너비 높이 80으로 했고 그거에따라서 갚을 동일하게 해서 동그라미를 만들었음) 105 레프트 , 너비 ㄴ
-        
-//        addSubview(usernameLabel)
-//        usernameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 20, paddingLeft: 14, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        profileImageView.layer.cornerRadius = 200 / 2 // 너비와 높이의 값의 따라서 나누게 되면 동그라미가 제대로 됨 (너비 높이 80으로 했고 그거에따라서 값을 동일하게 해서 동그라미를 만들었음) 105 레프트 , 너비 ㄴ
+
         
         addSubview(nameLabel)
         nameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 20, paddingLeft: 14, paddingBottom: 0, paddingRight: 14, width: 0, height: 0)

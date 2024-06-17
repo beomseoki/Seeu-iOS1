@@ -47,38 +47,47 @@ class HomeFeed: UITableViewController, MainCellDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! MainCell
-    let post = posts[indexPath.row]
-    cell.post = post
-    cell.delegate = self
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! MainCell
+        let post = posts[indexPath.row]
+        cell.post = post
+        cell.delegate = self
 
-    // 셀 초기화
-    cell.usernameButton.setTitle("", for: .normal)
-    cell.profileImageView.image = UIImage(named: "default_profile_image")
+        // 사용자 정보를 비동기적으로 로드하고 셀에 설정
+        Database.fetchUser(with: post.ownerUid) { user in
+            DispatchQueue.main.async {
+                guard let visibleCell = self.visibleCell(for: post.postId) else { return }
 
-    // 사용자 정보를 비동기적으로 로드
-    Database.fetchUser(with: post.ownerUid) { user in
-        DispatchQueue.main.async {
-            // 셀이 여전히 화면에 표시되는지 확인
-            guard let currentPost = cell.post, currentPost.postId == post.postId else { return }
+                // 셀이 여전히 화면에 표시되는지 확인
+                guard let currentPost = visibleCell.post, currentPost.postId == post.postId else { return }
 
-            // 사용자 이름과 이미지 설정
-            cell.usernameButton.setTitle(user.name, for: .normal)
-            if let profileImageUrl = user.profileImageUrl, let url = URL(string: profileImageUrl) {
-                cell.profileImageView.kf.setImage(with: url)
-            } else {
-                cell.profileImageView.image = UIImage(named: "default_profile_image")
+                // 사용자 이름과 이미지 설정
+                visibleCell.usernameButton.setTitle(user.name, for: .normal)
+                if let profileImageUrl = user.profileImageUrl, let url = URL(string: profileImageUrl) {
+                    visibleCell.profileImageView.kf.setImage(with: url)
+                } else {
+                    visibleCell.profileImageView.image = UIImage(named: "default_profile_image")
+                }
             }
         }
-    }
 
-    // 댓글 수 업데이트
-    if let commentCount = post.comments?.count {
-        cell.configureCommentCount(commentCount: commentCount)
-    }
+        // 댓글 수 업데이트
+        if let commentCount = post.comments?.count {
+            cell.configureCommentCount(commentCount: commentCount)
+        }
 
-    return cell
-}
+        return cell
+    }
+    
+    private func visibleCell(for postId: String) -> MainCell? {
+        guard let indexPaths = tableView.indexPathsForVisibleRows else { return nil }
+
+        for indexPath in indexPaths {
+            if let cell = tableView.cellForRow(at: indexPath) as? MainCell, cell.post?.postId == postId {
+                return cell
+            }
+        }
+        return nil
+    }
 
     // MARK: - MainCell Protocol
     
@@ -169,18 +178,6 @@ class HomeFeed: UITableViewController, MainCellDelegate {
     }
 }
 
-
-    // postId에 해당하는 셀을 반환하는 메서드
-    private func visibleCell(for postId: String) -> MainCell? {
-        guard let indexPaths = tableView.indexPathsForVisibleRows else { return nil }
-
-        for indexPath in indexPaths {
-            if let cell = tableView.cellForRow(at: indexPath) as? MainCell, cell.post?.postId == postId {
-                return cell
-            }
-        }
-        return nil
-    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = posts[indexPath.row]
